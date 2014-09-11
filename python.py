@@ -1,9 +1,11 @@
 import csv
 
 initialList = []
-with open('randomlist.txt', newline='') as bank:
+with open('randomlist.txt') as bank:
     for row in csv.reader(bank):
-        initialList.append(row)
+        initialList.append(row[0])
+
+print initialList
 
 def isFriendsWith(word1, word2):
     if(len(word1) == len(word2)): # If the words are the same length, checks how many characters are different.
@@ -36,25 +38,22 @@ def isFriendsWith(word1, word2):
 
 firstFriends = {}
 
-def createCloseFriendsDict(wordbank): # Takes a wordbank and creates a dictionary with each of the worbank's words as keys and a list of that word's first degree friends as the respective values.
+def createCloseFriendsDict(wordbank): # Takes a wordbank and creates a dictionary with each of the wordbank's words as keys and a list of that word's first degree friends as the respective values.
   for socialite in wordbank:
+    if socialite not in firstFriends:
+        firstFriends[socialite] = []
     for potentialFriend in wordbank:
       if isFriendsWith(socialite, potentialFriend): # If they're friends, add the new friend to the key's value list
-        if socialite in firstFriends:
+        if potentialFriend != socialite and potentialFriend not in firstFriends[socialite]:
           firstFriends[socialite].append(potentialFriend)
-        else:
-          firstFriends[socialite] = [potentialFriend]
-      else: # If they're not friends, create an empty list for the key if it does not have one.
-        if socialite not in firstFriends:
-          firstFriends[socialite] = []
 
-createCloseFriendsDict(test)
+createCloseFriendsDict(initialList)
 
 def createSocialNetworks(friendbank): # Appends friends's friends ... 's friends to create social networks
   for word in friendbank.keys(): # Iterates through all words
     for friend in friendbank[word]: # Iterates through all friends for each word
       for friendsFriend in friendbank[friend]: # Iterates through all that friend's friends
-        if friendsFriend not in friendbank[word]:
+        if friendsFriend not in friendbank[word] and friendsFriend != word:
           friendbank[word].append(friendsFriend) # Adds non-duplicates to list
   return friendbank
 
