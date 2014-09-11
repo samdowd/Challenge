@@ -1,3 +1,9 @@
+import csv
+
+initialList = []
+with open('randomlist.txt', newline='') as bank:
+    for row in csv.reader(bank):
+        initialList.append(row)
 
 def isFriendsWith(word1, word2):
     if(len(word1) == len(word2)): # If the words are the same length, checks how many characters are different.
@@ -28,7 +34,6 @@ def isFriendsWith(word1, word2):
             charPosition += 1
         return False
 
-test = ['hello', 'hellop', 'hallo', 'halpo', 'george']
 firstFriends = {}
 
 def createCloseFriendsDict(wordbank): # Takes a wordbank and creates a dictionary with each of the worbank's words as keys and a list of that word's first degree friends as the respective values.
@@ -45,15 +50,14 @@ def createCloseFriendsDict(wordbank): # Takes a wordbank and creates a dictionar
 
 createCloseFriendsDict(test)
 
-def createSocialNetworks(friendbank): #
-  for word in friendbank.keys():
-    for friend in friendbank[word]:
-      for friendsFriend in friendbank[friend]:
+def createSocialNetworks(friendbank): # Appends friends's friends ... 's friends to create social networks
+  for word in friendbank.keys(): # Iterates through all words
+    for friend in friendbank[word]: # Iterates through all friends for each word
+      for friendsFriend in friendbank[friend]: # Iterates through all that friend's friends
         if friendsFriend not in friendbank[word]:
-          friendbank[word].append(friendsFriend)
+          friendbank[word].append(friendsFriend) # Adds non-duplicates to list
   return friendbank
-      
-      
+
 socialNetworks = createSocialNetworks(firstFriends)
 
 print socialNetworks
